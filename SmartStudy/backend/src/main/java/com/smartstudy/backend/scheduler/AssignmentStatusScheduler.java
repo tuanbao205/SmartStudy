@@ -1,7 +1,10 @@
 package com.smartstudy.backend.scheduler;
 
 import com.smartstudy.backend.entity.Assignment;
+import com.smartstudy.backend.entity.StudentCourse;
 import com.smartstudy.backend.repository.AssignmentRepository;
+import com.smartstudy.backend.repository.StudentCourseRepository;
+import com.smartstudy.backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,8 +20,9 @@ import java.util.List;
 public class AssignmentStatusScheduler {
 
     private final AssignmentRepository assignmentRepository;
+    private final StudentCourseRepository studentCourseRepository;
+    private final NotificationService notificationService;
 
-    // Chạy mỗi 1 giờ (3600000 ms) - có thể chỉnh lại tuỳ nhu cầu
     @Scheduled(fixedRate = 3600000)
     @Transactional
     public void markOverdueAssignments() {
@@ -31,9 +35,22 @@ public class AssignmentStatusScheduler {
 
         for (Assignment assignment : overdueList) {
             assignment.setStatus("OVERDUE");
+
+            List<StudentCourse> enrolledStudents = studentCourseRepository
+                    .findByCourseId(assignment.getCourse().getId());
+
+            for (StudentCourse sc : enrolledStudents) {
+                notificationService.createNotification(
+                        sc.getUser(),
+                        "Bài tập quá hạn",
+                        "Bài tập \"" + assignment.getTitle() + "\" (môn " + assignment.getCourse().getName() +
+                                ") đã quá deadline.",
+                        "OVERDUE"
+                );
+            }
         }
         assignmentRepository.saveAll(overdueList);
 
-        log.info("Đã cập nhật {} assignment sang trạng thái OVERDUE.", overdueList.size());
+        log.info("Đã cập nhật {} assignment sang trạng thái OVERDUE và gửi thông báo.", overdueList.size());
     }
 }

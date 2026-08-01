@@ -11,6 +11,7 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, Lo
 
     @Query("SELECT sc FROM StudentCourse sc JOIN FETCH sc.course WHERE sc.user.id = :userId")
     List<StudentCourse> findByUserIdWithCourse(@Param("userId") Long userId);
+    List<StudentCourse> findByCourseId(Long courseId);
 
     boolean existsByUserIdAndCourseId(Long userId, Long courseId);
 }
