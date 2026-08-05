@@ -36,6 +36,8 @@ public class ScheduleService {
         schedule.setStartTime(request.getStartTime());
         schedule.setEndTime(request.getEndTime());
         schedule.setRoom(request.getRoom());
+        schedule.setStartDate(request.getStartDate());
+        schedule.setEndDate(request.getEndDate());
 
         return toResponse(scheduleRepository.save(schedule));
     }
@@ -86,7 +88,9 @@ public class ScheduleService {
                 schedule.getDayOfWeek(),
                 schedule.getStartTime(),
                 schedule.getEndTime(),
-                schedule.getRoom()
+                schedule.getRoom(),
+                schedule.getStartDate(),
+                schedule.getEndDate()
         );
     }
 }

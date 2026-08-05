@@ -5,6 +5,8 @@ import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import Courses from './pages/Courses';
+import SchedulePage from './pages/Schedule';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/courses" element={<Courses />} />
+              <Route path="/schedule" element={<SchedulePage />} />
             </Route>
           </Route>
 

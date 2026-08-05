@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -25,6 +26,8 @@ public class ScheduleRequest {
 
     @NotNull(message = "Giờ kết thúc không được để trống")
     private LocalTime endTime;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     private String room;
 }
