@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import SchedulePage from './pages/Schedule';
+import Assignments from './pages/Assignments';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/courses" element={<Courses />} />
               <Route path="/schedule" element={<SchedulePage />} />
+              <Route path="/assignments" element={<Assignments />} />
             </Route>
           </Route>
 
