@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GpaResponse {
     private BigDecimal gpa;
+    private BigDecimal gpa4Scale;
     private List<CourseGradeSummary> courseSummaries;
 
     @Getter
@@ -21,7 +22,7 @@ public class GpaResponse {
         private Long courseId;
         private String courseName;
         private Integer credits;
-        private BigDecimal totalScore; // null nếu chưa có điểm
+        private BigDecimal totalScore;
         private BigDecimal gpa4Scale;
     }
 }

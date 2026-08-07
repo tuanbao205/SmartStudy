@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import SchedulePage from './pages/Schedule';
 import Assignments from './pages/Assignments';
+import Grades from './pages/Grades';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/courses" element={<Courses />} />
               <Route path="/schedule" element={<SchedulePage />} />
               <Route path="/assignments" element={<Assignments />} />
+              <Route path="/grades" element={<Grades />} />
             </Route>
           </Route>
 

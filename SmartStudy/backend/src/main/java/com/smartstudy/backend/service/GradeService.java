@@ -102,11 +102,13 @@ public class GradeService {
             }
         }
 
-        BigDecimal gpa = totalCredits == 0
-                ? null
-                : weightedSum.divide(BigDecimal.valueOf(totalCredits), 2, RoundingMode.HALF_UP);
+       BigDecimal gpa = totalCredits == 0
+            ? null
+            : weightedSum.divide(BigDecimal.valueOf(totalCredits), 2, RoundingMode.HALF_UP);
 
-        return new GpaResponse(gpa, summaries);
+        BigDecimal gpa4Scale = convertToGpa4Scale(gpa);
+
+        return new GpaResponse(gpa, gpa4Scale, summaries);
     }
 
     public GpaResponse.CourseGradeSummary getCourseGpa(Long courseId, String email) {

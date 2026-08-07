@@ -87,7 +87,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-wider text-muted">GPA</p>
+            <p className="font-mono text-[11px] uppercase tracking-wider text-muted">Tổng điểm tích luỹ</p>
             <p className="text-xs text-muted mt-0.5">thang điểm 10</p>
           </div>
         </div>
