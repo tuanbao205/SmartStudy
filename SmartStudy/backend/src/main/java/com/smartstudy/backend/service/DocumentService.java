@@ -6,6 +6,7 @@ import com.smartstudy.backend.entity.DocumentChunk;
 import com.smartstudy.backend.entity.User;
 import com.smartstudy.backend.repository.DocumentChunkRepository;
 import com.smartstudy.backend.repository.DocumentRepository;
+import com.smartstudy.backend.repository.EmbeddingRepository;
 import com.smartstudy.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,8 @@ public class DocumentService {
     private final DocumentChunkRepository documentChunkRepository;
     private final UserRepository userRepository;
     private final TextExtractionService textExtractionService;
+    private final GeminiEmbeddingService geminiEmbeddingService;
+    private final EmbeddingRepository embeddingRepository;
 
     @Value("${app.upload-dir}")
     private String uploadDir;
@@ -66,11 +69,16 @@ public class DocumentService {
                 chunk.setDocument(saved);
                 chunk.setChunkIndex(i);
                 chunk.setContent(chunks.get(i));
-                documentChunkRepository.save(chunk);
+                DocumentChunk savedChunk = documentChunkRepository.save(chunk);
+
+                // Sinh embedding cho từng chunk và lưu vào pgvector
+                List<Double> vector = geminiEmbeddingService.embed(chunks.get(i));
+                embeddingRepository.saveEmbedding(savedChunk.getId(), vector);
             }
 
             saved.setStatus("READY");
         } catch (Exception e) {
+            e.printStackTrace();
             saved.setStatus("FAILED");
         }
         documentRepository.save(saved);
