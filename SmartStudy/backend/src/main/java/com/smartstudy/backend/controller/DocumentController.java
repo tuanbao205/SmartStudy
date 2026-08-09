@@ -7,6 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,5 +31,15 @@ public class DocumentController {
     @GetMapping
     public ResponseEntity<List<DocumentResponse>> getMyDocuments(Authentication authentication) {
         return ResponseEntity.ok(documentService.getMyDocuments(authentication.getName()));
+    }
+    @GetMapping("/{id}/view")
+    public ResponseEntity<Resource> viewFile(@PathVariable Long id, Authentication authentication) {
+        return documentService.getFileForView(id, authentication.getName());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id, Authentication authentication) {
+        documentService.deleteDocument(id, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
 }

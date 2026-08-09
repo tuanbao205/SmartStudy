@@ -12,6 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -92,6 +97,48 @@ public class DocumentService {
         return documentRepository.findByUserId(user.getId()).stream().map(this::toResponse).toList();
     }
 
+    public ResponseEntity<Resource> getFileForView(Long documentId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("Không tìm thấy user"));
+
+        Document doc = documentRepository.findById(documentId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài liệu"));
+
+        if (!doc.getUser().getId().equals(user.getId())) {
+            throw new IllegalStateException("Bạn không có quyền xem tài liệu này");
+        }
+
+        Resource resource = new FileSystemResource(doc.getStoredPath());
+        MediaType mediaType = "PDF".equals(doc.getFileType())
+                ? MediaType.APPLICATION_PDF
+                : MediaType.APPLICATION_OCTET_STREAM;
+
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + doc.getOriginalName() + "\"")
+                .body(resource);
+    }
+
+    public void deleteDocument(Long documentId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("Không tìm thấy user"));
+
+        Document doc = documentRepository.findById(documentId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài liệu"));
+
+        if (!doc.getUser().getId().equals(user.getId())) {
+            throw new IllegalStateException("Bạn không có quyền xoá tài liệu này");
+        }
+
+        // Xoá file vật lý trên đĩa
+        try {
+            Files.deleteIfExists(Path.of(doc.getStoredPath()));
+        } catch (IOException e) {
+            // Không chặn việc xoá bản ghi DB nếu xoá file vật lý thất bại
+        }
+
+        documentRepository.delete(doc); // cascade sẽ tự xoá document_chunks liên quan
+    }
     // Chia văn bản thành các đoạn ~800 ký tự, overlap 100 ký tự (tránh cắt đứt ý)
     private List<String> chunkText(String text, int chunkSize, int overlap) {
         List<String> chunks = new java.util.ArrayList<>();
