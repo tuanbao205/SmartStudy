@@ -8,6 +8,8 @@ const navItems = [
   { to: '/schedule', label: 'Lịch học', icon: '▦' },
   { to: '/assignments', label: 'Bài tập', icon: '☰' },
   { to: '/grades', label: 'Điểm số', icon: '✓' },
+  { to: '/documents', label: 'Tài liệu', icon: '📄' },
+  { to: '/chat', label: 'Hỏi đáp AI', icon: '💬' },
 ];
 
 export default function Layout() {

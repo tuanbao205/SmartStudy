@@ -9,6 +9,8 @@ import Courses from './pages/Courses';
 import SchedulePage from './pages/Schedule';
 import Assignments from './pages/Assignments';
 import Grades from './pages/Grades';
+import Documents from './pages/Documents';
+import Chat from './pages/Chat';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
               <Route path="/schedule" element={<SchedulePage />} />
               <Route path="/assignments" element={<Assignments />} />
               <Route path="/grades" element={<Grades />} />
+              <Route path="/documents" element={<Documents />} />
+              <Route path="/chat" element={<Chat />} /> 
             </Route>
           </Route>
 
